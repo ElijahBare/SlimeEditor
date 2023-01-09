@@ -206,7 +206,7 @@ public class SlimeEditor extends JFrame {
 
             String text = textArea.getText();
 
-            if (!undoState.toString().contains(text)) {
+            if (!undoState.toString().contains(text) && fileName == null && fileName == "") {
                 undoState.add(text); //set it to the current state
                 try {
                     JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
@@ -222,6 +222,9 @@ public class SlimeEditor extends JFrame {
                         FileWriter writer = new FileWriter(fileName);
                         writer.write(text);
                         writer.close();
+
+
+                        System.out.println(fileName);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
