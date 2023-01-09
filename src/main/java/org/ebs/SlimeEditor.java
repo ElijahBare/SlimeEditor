@@ -151,7 +151,7 @@ public class SlimeEditor extends JFrame {
                 }
 
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ignored) {
                 }
             }
@@ -167,7 +167,7 @@ public class SlimeEditor extends JFrame {
         public void actionPerformed(ActionEvent e) {
             // Clear the text area
             textArea.setText("");
-            fileName = "";
+            fileName = null;
         }
     }
 
@@ -206,30 +206,36 @@ public class SlimeEditor extends JFrame {
 
             String text = textArea.getText();
 
-            if (!undoState.toString().contains(text) && fileName == null && fileName == "") {
+            if (fileName == null || fileName == "") {
                 undoState.add(text); //set it to the current state
-                try {
-                    JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
 
-                    int returnValue = fileChooser.showOpenDialog(null);
+                JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
 
-                    if (returnValue == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
+                int returnValue = fileChooser.showOpenDialog(null);
 
-                        fileName = selectedFile.getAbsolutePath();
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
 
-                        // Write the contents of the text area to the file
-                        FileWriter writer = new FileWriter(fileName);
-                        writer.write(text);
-                        writer.close();
+                    fileName = selectedFile.getAbsolutePath();
 
 
-                        System.out.println(fileName);
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
                 }
+
+
             }
+
+            try {
+                // Write the contents of the text area to the file
+                FileWriter writer = new FileWriter(fileName);
+                writer.write(text);
+                writer.close();
+
+
+                System.out.println(fileName + " Saved...");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
         }
 
 
