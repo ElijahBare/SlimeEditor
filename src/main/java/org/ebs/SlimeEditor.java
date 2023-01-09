@@ -35,6 +35,7 @@ public class SlimeEditor extends JFrame {
     private JMenuItem cutMenuItem;
     private JMenuItem copyMenuItem;
     private JMenuItem undoMenuItem;
+    private JMenuItem redoMenuItem;
     private JMenuItem pasteMenuItem;
     private JMenuItem aboutMenuItem;
 
@@ -73,6 +74,7 @@ public class SlimeEditor extends JFrame {
         menuBar.add(helpMenu);
 
         undoMenuItem = new JMenuItem("Undo");
+        redoMenuItem = new JMenuItem("Redo");
 
 
         // Create the File menu items and add them to the File menu
@@ -94,6 +96,7 @@ public class SlimeEditor extends JFrame {
         editMenu.add(pasteMenuItem);
         pasteMenuItem = new JMenuItem("Undo");
         editMenu.add(undoMenuItem);
+        editMenu.add(redoMenuItem);
 
         // Create the Help menu item and add it to the Help menu
         aboutMenuItem = new JMenuItem("About");
@@ -116,6 +119,7 @@ public class SlimeEditor extends JFrame {
         copyMenuItem.addActionListener(new CopyMenuItemListener());
         pasteMenuItem.addActionListener(new PasteMenuItemListener());
         undoMenuItem.addActionListener(new UndoItemListener());
+        redoMenuItem.addActionListener(new RedoItemListener());
         aboutMenuItem.addActionListener(new AboutMenuItemListener());
 
         // Add key listeners for the menu items
@@ -125,23 +129,26 @@ public class SlimeEditor extends JFrame {
         cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
         copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
         pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
 
 
         //Undo checker thread
-
         Thread thread = new Thread(() ->
         {
             while (!Thread.currentThread().isInterrupted()) {
-                if (!undoState.toString().contains(textArea.getText())){ // if it has changed
+                if (!undoState.toString().contains(textArea.getText())) {
                     undoState.add(textArea.getText()); //set it to the current state
                 }
+
+                System.out.println("backing up: " + undoState + " " + currentState);
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException ignored) {
                 }
             }
         }, "Undo-Checker-Thread");
+
         thread.start();
 
 
@@ -166,9 +173,9 @@ public class SlimeEditor extends JFrame {
 
                 FileReader fileReader = new FileReader(fileName);
                 int i;
-                while((i = fileReader.read()) != -1) {
-                    System.out.print((char)i);
-                    textArea.append(String.valueOf((char)i));
+                while ((i = fileReader.read()) != -1) {
+                    System.out.print((char) i);
+                    textArea.append(String.valueOf((char) i));
 
                 }
 
@@ -182,24 +189,26 @@ public class SlimeEditor extends JFrame {
     class SaveMenuItemListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
-            undoState.add(textArea.getText()); //set it to the current state
-
-
             String text = textArea.getText();
 
-            try {
-                // Prompt the user for a file name if they haven't set it already
-                if (Objects.equals(fileName, "")) {
-                    fileName = JOptionPane.showInputDialog(SlimeEditor.this, "Enter the file name:");
+            if (!undoState.toString().contains(text)) {
+                undoState.add(text); //set it to the current state
+                try {
+                    // Prompt the user for a file name if they haven't set it already
+                    if (Objects.equals(fileName, "") || fileMenu == null) {
+                        fileName = JOptionPane.showInputDialog(SlimeEditor.this, "Enter the file name:");
+                    }
+                    // Write the contents of the text area to the file
+                    FileWriter writer = new FileWriter(fileName);
+                    writer.write(text);
+                    writer.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-                // Write the contents of the text area to the file
-                FileWriter writer = new FileWriter(fileName);
-                writer.write(text);
-                writer.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
+
+
     }
 
 
@@ -235,7 +244,22 @@ public class SlimeEditor extends JFrame {
     class UndoItemListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             textArea.setText(undoState.get(currentState));
-            currentState +=1;
+            currentState += 1;
+
+            if (undoState.size()-1 < currentState) {
+                currentState = undoState.size() -1;
+            }
+        }
+    }
+
+    // Inner class for the redo functionality
+    class RedoItemListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            textArea.setText(undoState.get(currentState));
+            currentState -= 1;
+            if (currentState < 0) {
+                currentState = 0;
+            }
         }
     }
 
