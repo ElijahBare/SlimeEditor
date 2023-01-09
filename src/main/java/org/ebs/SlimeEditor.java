@@ -27,6 +27,8 @@ public class SlimeEditor extends JFrame {
     private JMenuItem copyMenuItem;
     private JMenuItem undoMenuItem;
     private JMenuItem redoMenuItem;
+    private JMenuItem upFontSize;
+    private JMenuItem lowerFontSize;
     private JMenuItem pasteMenuItem;
     private JMenuItem aboutMenuItem;
 
@@ -49,6 +51,7 @@ public class SlimeEditor extends JFrame {
 
         add(new JScrollPane(textArea), BorderLayout.CENTER);
 
+
         // Create the menu bar
         menuBar = new JMenuBar();
 
@@ -66,6 +69,9 @@ public class SlimeEditor extends JFrame {
 
         undoMenuItem = new JMenuItem("Undo");
         redoMenuItem = new JMenuItem("Redo");
+
+        upFontSize = new JMenuItem("Increase Font Size");
+        lowerFontSize = new JMenuItem("Decrease Font Size");
 
 
         // Create the File menu items and add them to the File menu
@@ -86,8 +92,12 @@ public class SlimeEditor extends JFrame {
         pasteMenuItem = new JMenuItem("Paste");
         editMenu.add(pasteMenuItem);
         pasteMenuItem = new JMenuItem("Undo");
+
         editMenu.add(undoMenuItem);
         editMenu.add(redoMenuItem);
+
+        editMenu.add(upFontSize);
+        editMenu.add(lowerFontSize);
 
         // Create the Help menu item and add it to the Help menu
         aboutMenuItem = new JMenuItem("About");
@@ -112,16 +122,24 @@ public class SlimeEditor extends JFrame {
         undoMenuItem.addActionListener(new UndoItemListener());
         redoMenuItem.addActionListener(new RedoItemListener());
         aboutMenuItem.addActionListener(new AboutMenuItemListener());
+        upFontSize.addActionListener(new FontSizeChangeListenerPlus());
+        lowerFontSize.addActionListener(new FontSizeChangeListenerMinus());
 
         // Add key listeners for the menu items
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+
         cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
         copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
+
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
         redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
-        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
+
+
+        upFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_MASK));
+        lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK));
 
 
         //Undo checker thread
@@ -191,14 +209,20 @@ public class SlimeEditor extends JFrame {
             if (!undoState.toString().contains(text)) {
                 undoState.add(text); //set it to the current state
                 try {
-                    // Prompt the user for a file name if they haven't set it already
-                    if (Objects.equals(fileName, "") || fileMenu == null) {
-                        fileName = JOptionPane.showInputDialog(SlimeEditor.this, "Enter the file name:");
+                    JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
+
+                    int returnValue = fileChooser.showOpenDialog(null);
+
+                    if (returnValue == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+
+                        fileName = selectedFile.getAbsolutePath();
+
+                        // Write the contents of the text area to the file
+                        FileWriter writer = new FileWriter(fileName);
+                        writer.write(text);
+                        writer.close();
                     }
-                    // Write the contents of the text area to the file
-                    FileWriter writer = new FileWriter(fileName);
-                    writer.write(text);
-                    writer.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -257,6 +281,18 @@ public class SlimeEditor extends JFrame {
             if (currentState < 0) {
                 currentState = 0;
             }
+        }
+    }
+
+    class FontSizeChangeListenerPlus implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            textArea.setFont(new Font(textArea.getFont().getFontName(), Font.PLAIN, textArea.getFont().getSize() + 1));
+        }
+    }
+
+    class FontSizeChangeListenerMinus implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            textArea.setFont(new Font(textArea.getFont().getFontName(), Font.PLAIN, textArea.getFont().getSize() - 1));
         }
     }
 
