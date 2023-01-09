@@ -3,20 +3,11 @@ package org.ebs;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -141,7 +132,6 @@ public class SlimeEditor extends JFrame {
                     undoState.add(textArea.getText()); //set it to the current state
                 }
 
-                System.out.println("backing up: " + undoState + " " + currentState);
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException ignored) {
@@ -168,20 +158,27 @@ public class SlimeEditor extends JFrame {
         public void actionPerformed(ActionEvent e) {
             try {
 
-                fileName = JOptionPane.showInputDialog(SlimeEditor.this, "Enter the file name:");
+                JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
+                int returnValue = fileChooser.showOpenDialog(null);
 
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
 
-                FileReader fileReader = new FileReader(fileName);
-                int i;
-                while ((i = fileReader.read()) != -1) {
-                    System.out.print((char) i);
-                    textArea.append(String.valueOf((char) i));
+                    fileName = selectedFile.getAbsolutePath();
 
+                    FileReader fileReader = new FileReader(fileName);
+                    int i;
+                    while ((i = fileReader.read()) != -1) {
+                        textArea.append(String.valueOf((char) i));
+
+                    }
                 }
+
 
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+
         }
     }
 
@@ -246,8 +243,8 @@ public class SlimeEditor extends JFrame {
             textArea.setText(undoState.get(currentState));
             currentState += 1;
 
-            if (undoState.size()-1 < currentState) {
-                currentState = undoState.size() -1;
+            if (undoState.size() - 1 < currentState) {
+                currentState = undoState.size() - 1;
             }
         }
     }
