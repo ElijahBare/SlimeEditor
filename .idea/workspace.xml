@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ebs/SlimeEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ebs/SlimeEditor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ebs/scripting/ScriptingAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ebs/scripting/ScriptingAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,6 +99,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="org.ebs.SlimeEditor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.ebs.SlimeEditor" />
+      <module name="SlimeEditor.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.ebs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SlimeEditor [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -150,9 +162,9 @@
       <list>
         <item itemvalue="JAR Application.SlimeEditor-1.0-SNAPSHOT.jar" />
         <item itemvalue="Gradle.SlimeEditor [build]" />
-        <item itemvalue="Gradle.SlimeEditor [clean]" />
         <item itemvalue="Application.org.ebs.SlimeEditor" />
         <item itemvalue="Application.SlimeEditor" />
+        <item itemvalue="Gradle.SlimeEditor [clean]" />
       </list>
     </recent_temporary>
   </component>

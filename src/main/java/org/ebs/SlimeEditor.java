@@ -160,34 +160,37 @@ public class SlimeEditor extends JFrame {
         lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK));
 
 
-        // Add key listeners for the menu items (Mac)
-        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK));
-        openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.META_MASK));
-        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_MASK));
+        //sheeeeeeeeeeeeesh
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            // Add key listeners for the menu items (Mac)
+            newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK));
+            openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.META_MASK));
+            saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_MASK));
 
-        cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.META_MASK));
-        copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.META_MASK));
-        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.META_MASK));
+            cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.META_MASK));
+            copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.META_MASK));
+            pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.META_MASK));
 
-        undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.META_MASK));
-        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.META_MASK));
+            undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.META_MASK));
+            redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.META_MASK));
 
 
-        upFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.META_MASK));
-        lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.META_MASK));
-
+            upFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.META_MASK));
+            lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.META_MASK));
+        }
 
         //Undo checker thread
         Thread generalPurposeThread = new Thread(() ->
         {
             while (!Thread.currentThread().isInterrupted()) {
                     HashMap<String, Color> wordsToColors = new HashMap<>();
-                    wordsToColors.put("if", new Color(0xA9FF7600, true));
-                    wordsToColors.put("else", new Color(0xA9FF7600, true));
-                    wordsToColors.put("is", new Color(0xAE6444FF, true));
-                    wordsToColors.put("in", new Color(0xAE6444FF, true));
-                    wordsToColors.put("set", new Color(0x963235C9, true));
+                    wordsToColors.put("PUSH", new Color(0xAE6444FF, true));
+                    wordsToColors.put("ADD", new Color(0xA9FF7600, true));
+                    wordsToColors.put("SUBTRACT", new Color(0xA9FF7600, true));
+                    wordsToColors.put("DIVIDE", new Color(0xA9FF7600, true));
+                    wordsToColors.put("MULTIPLY", new Color(0xAE6444FF, true));
                     wordsToColors.put("\"", new Color(0xA863AF63, true));
+                    wordsToColors.put("VAR", new Color(0xA863AF63, true));
                     wordsToColors.put("//", Color.GRAY.brighter());
 
                     highlightWords(wordsToColors);
@@ -232,7 +235,7 @@ public class SlimeEditor extends JFrame {
                         writer.write(textArea.getText());
                         writer.close();
 
-                        System.out.println("AutoSave Running...");
+                       JOptionPane.showMessageDialog(null,"AutoSave Running...");
                     }
 
                 } catch (IOException ex) {
@@ -330,7 +333,7 @@ public class SlimeEditor extends JFrame {
                 writer.close();
 
 
-                System.out.println(fileName + " Saved...");
+               JOptionPane.showMessageDialog(null,fileName + " Saved...");
             } catch (IOException ex) {
                 ex.printStackTrace();
 
@@ -456,7 +459,9 @@ public class SlimeEditor extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         INSTANCE = new SlimeEditor();
+        Runtime.getRuntime().exec(new String[] {"cmd", "/K", "Start"});
+
     }
 }

@@ -1,13 +1,17 @@
 package org.ebs.scripting;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.*;
 
 public class ScriptingAPI {
 
+
+    public static String result = "";
     public static Map<String, Object> variables = new HashMap<String, Object>();
 
     public static void runScript(String path) {
+        result = "";
         File file = new File(path);
         try (Scanner sc = new Scanner(file)) {
             while (sc.hasNext()) {
@@ -18,18 +22,10 @@ public class ScriptingAPI {
 
 
                 if (line.startsWith("LOG")) {
-                    System.out.println(line.substring(line.indexOf("LOG ") + 4));
+                    String log = line.substring(line.indexOf("LOG ") + 4);
+                    result += log + "\n";
                 }
 
-                if (line.startsWith("CONST")) {
-                    //already set
-                    if (variables.containsValue(strings[1])) {
-                        throw new Exception("Const variable " + strings[1] + " Defined More than once");
-                    } else {
-                        variables.put(strings[1], strings[2]);
-                        System.out.println(strings[1] + " has been set to " + strings[2]);
-                    }
-                }
 
                 if (line.startsWith("VAR")) {
                     //already set
@@ -39,12 +35,15 @@ public class ScriptingAPI {
                     } else {
                         variables.put(strings[1], strings[2]);
                     }
-                    System.out.println(strings[1] + " has been set to " + strings[2]);
+                    //result += (strings[1] + " has been set to " + strings[2]) + "\n";
 
                 }
+
             }
+            JOptionPane.showMessageDialog(null,"Program output: \n" + result + "\n");
+
         } catch (Exception e) {
-            System.out.println("Something wrong! " + Arrays.toString(e.getStackTrace()));
+           JOptionPane.showMessageDialog(null,"Something wrong! " + Arrays.toString(e.getStackTrace()));
         }
 
     }
@@ -72,7 +71,7 @@ public class ScriptingAPI {
                         stack.add(a + b);
                     }
                     break;
-                case ("MINUS"):
+                case ("SUBTRACT"):
                     if (stack.size() > 1) {
                         double a = stack.get(stack.size() - 1);
                         double b = stack.get(stack.size() - 2);
@@ -104,16 +103,18 @@ public class ScriptingAPI {
                     break;
                 case ("POP"):
                     if (stack.size() > 0) {
-                        System.out.println(stack.get(stack.size() - 1));
+                        result += (stack.get(stack.size() - 1)) + "\n";
                         stack.remove(stack.size() - 1);
                     }
                     break;
                 case ("PICK"):
                     if (stack.size() > 0) {
-                        System.out.println(stack.get(stack.size() - 1));
+                        result += (stack.get(stack.size() - 1)) + "\n";
                     }
                     break;
             }
         }
+
+
     }
 }
