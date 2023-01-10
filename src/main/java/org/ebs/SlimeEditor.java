@@ -5,16 +5,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class SlimeEditor extends JFrame {
 
-    private final JTextArea textArea;
+    public static SlimeEditor INSTANCE;
+    public final JTextArea textArea;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -32,12 +38,14 @@ public class SlimeEditor extends JFrame {
     private JMenuItem pasteMenuItem;
     private JMenuItem aboutMenuItem;
 
+
     private String fileName = "";
     private ArrayList<String> undoState = new ArrayList<String>();
 
     int currentState = 0;
 
     public SlimeEditor() {
+
         // Set the title and default close operation
         setTitle("Slime Editor");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -157,6 +165,33 @@ public class SlimeEditor extends JFrame {
 
         upFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.META_MASK));
         lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.META_MASK));
+
+
+        //Undo checker thread
+        Thread generalPurposeThread = new Thread(() ->
+        {
+            while (!Thread.currentThread().isInterrupted()) {
+                    HashMap<String, Color> wordsToColors = new HashMap<>();
+                    wordsToColors.put("if", new Color(0xA9FF7600, true));
+                    wordsToColors.put("else", new Color(0xA9FF7600, true));
+                    wordsToColors.put("is", new Color(0xA9FF7600, true));
+                    wordsToColors.put("in", new Color(0xA9FF7600, true));
+                    wordsToColors.put("sendPacket", new Color(0x6C324BC9, true));
+                    wordsToColors.put("world", new Color(0x8E6444FF, true));
+                    wordsToColors.put("player", new Color(0x8E6444FF, true));
+                    wordsToColors.put("\"", new Color(0xA863AF63, true));
+
+                    highlightWords(wordsToColors);
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }, "General-Thread");
+
+        generalPurposeThread.start();
+
 
 
         //Undo checker thread
@@ -376,7 +411,26 @@ public class SlimeEditor extends JFrame {
         }
     }
 
+    private void highlightWords(Map<String, Color> wordsToColors) {
+        Highlighter highlighter = textArea.getHighlighter();
+        highlighter.removeAllHighlights();
+        String text = textArea.getText();
+        for (Map.Entry<String, Color> entry : wordsToColors.entrySet()) {
+            String word = entry.getKey();
+            Color color = entry.getValue();
+            int index = text.indexOf(word);
+            while (index >= 0) {
+                try {
+                    highlighter.addHighlight(index, index + word.length(), new DefaultHighlighter.DefaultHighlightPainter(color));
+                    index = text.indexOf(word, index + word.length());
+                } catch (BadLocationException e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        new SlimeEditor();
+        INSTANCE = new SlimeEditor();
     }
 }
