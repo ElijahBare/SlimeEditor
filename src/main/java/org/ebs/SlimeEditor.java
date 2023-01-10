@@ -1,5 +1,7 @@
 package org.ebs;
 
+import org.ebs.scripting.ScriptingAPI;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +22,7 @@ import java.util.Objects;
 public class SlimeEditor extends JFrame {
 
     public static SlimeEditor INSTANCE;
-    public final JTextArea textArea;
+    public JTextArea textArea;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -29,14 +31,21 @@ public class SlimeEditor extends JFrame {
     private JMenuItem openMenuItem;
     private JMenuItem saveMenuItem;
     private JMenuItem exitMenuItem;
+    private JMenuItem runMenuItem;
+
     private JMenuItem cutMenuItem;
     private JMenuItem copyMenuItem;
+    private JMenuItem pasteMenuItem;
+
     private JMenuItem undoMenuItem;
     private JMenuItem redoMenuItem;
+
     private JMenuItem upFontSize;
     private JMenuItem lowerFontSize;
-    private JMenuItem pasteMenuItem;
+
+
     private JMenuItem aboutMenuItem;
+
 
 
     private String fileName = "";
@@ -91,6 +100,8 @@ public class SlimeEditor extends JFrame {
         fileMenu.add(saveMenuItem);
         exitMenuItem = new JMenuItem("Exit");
         fileMenu.add(exitMenuItem);
+        runMenuItem = new JMenuItem("Run");
+        fileMenu.add(runMenuItem);
 
         // Create the Edit menu items and add them to the Edit menu
         cutMenuItem = new JMenuItem("Cut");
@@ -124,6 +135,7 @@ public class SlimeEditor extends JFrame {
         openMenuItem.addActionListener(new OpenMenuItemListener());
         saveMenuItem.addActionListener(new SaveMenuItemListener());
         exitMenuItem.addActionListener(new ExitMenuItemListener());
+        runMenuItem.addActionListener(new RunMenuItemListener());
         cutMenuItem.addActionListener(new CutMenuItemListener());
         copyMenuItem.addActionListener(new CopyMenuItemListener());
         pasteMenuItem.addActionListener(new PasteMenuItemListener());
@@ -399,6 +411,23 @@ public class SlimeEditor extends JFrame {
     class FontSizeChangeListenerMinus implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             textArea.setFont(new Font(textArea.getFont().getFontName(), Font.PLAIN, textArea.getFont().getSize() - 1));
+        }
+    }
+
+    class RunMenuItemListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            FileReader scriptReader = null;
+
+            try {
+                scriptReader = new FileReader(fileName);
+                // Create a map to hold the variables
+                Map<String, Object> variables = new HashMap<>();
+
+                // Run the script
+                ScriptingAPI.runScript(scriptReader, variables);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
