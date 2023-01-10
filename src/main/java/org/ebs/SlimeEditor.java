@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class SlimeEditor extends JFrame {
 
-    private JTextArea textArea;
+    private final JTextArea textArea;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -125,7 +125,7 @@ public class SlimeEditor extends JFrame {
         upFontSize.addActionListener(new FontSizeChangeListenerPlus());
         lowerFontSize.addActionListener(new FontSizeChangeListenerMinus());
 
-        // Add key listeners for the menu items
+        // Add key listeners for the menu items (Windows/Linux)
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
@@ -142,8 +142,25 @@ public class SlimeEditor extends JFrame {
         lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK));
 
 
+        // Add key listeners for the menu items (Mac)
+        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK));
+        openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.META_MASK));
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_MASK));
+
+        cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.META_MASK));
+        copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.META_MASK));
+        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.META_MASK));
+
+        undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.META_MASK));
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.META_MASK));
+
+
+        upFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.META_MASK));
+        lowerFontSize.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.META_MASK));
+
+
         //Undo checker thread
-        Thread thread = new Thread(() ->
+        Thread undoCheckThread = new Thread(() ->
         {
             while (!Thread.currentThread().isInterrupted()) {
                 if (!undoState.toString().contains(textArea.getText())) {
@@ -157,7 +174,35 @@ public class SlimeEditor extends JFrame {
             }
         }, "Undo-Checker-Thread");
 
-        thread.start();
+        undoCheckThread.start();
+
+        Thread autoSave = new Thread(() ->
+        {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+
+                    if (fileName != "" && fileName != null) {
+
+                        // Write the contents of the text area to the file
+                        FileWriter writer = new FileWriter(fileName);
+                        writer.write(textArea.getText());
+                        writer.close();
+
+                        System.out.println("AutoSave Running...");
+                    }
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                try {
+                    Thread.sleep(90000);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }, "Auto-Save-Thread");
+
+        autoSave.start();
 
 
     }
@@ -176,6 +221,8 @@ public class SlimeEditor extends JFrame {
         public void actionPerformed(ActionEvent e) {
             try {
 
+
+
                 JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
                 int returnValue = fileChooser.showOpenDialog(null);
 
@@ -183,6 +230,8 @@ public class SlimeEditor extends JFrame {
                     File selectedFile = fileChooser.getSelectedFile();
 
                     fileName = selectedFile.getAbsolutePath();
+
+                    textArea.setText("");
 
                     FileReader fileReader = new FileReader(fileName);
                     int i;
@@ -197,6 +246,12 @@ public class SlimeEditor extends JFrame {
                 throw new RuntimeException(ex);
             }
 
+
+            //Append file to title
+            if (fileName != "" && fileName != null) {
+                setTitle("Slime Editor | Editing " + fileName);
+            }
+
         }
     }
 
@@ -209,9 +264,9 @@ public class SlimeEditor extends JFrame {
             if (fileName == null || fileName == "") {
                 undoState.add(text); //set it to the current state
 
-                JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
-
-                int returnValue = fileChooser.showOpenDialog(null);
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setSelectedFile(new File("saved_file_name.txt"));
+                int returnValue = fileChooser.showSaveDialog(null);
 
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
@@ -234,7 +289,14 @@ public class SlimeEditor extends JFrame {
                 System.out.println(fileName + " Saved...");
             } catch (IOException ex) {
                 ex.printStackTrace();
+
             }
+
+            //Append file to title
+            if(fileName != "" && fileName !=null){
+                setTitle("Slime Editor | Editing " + fileName);
+            }
+
 
         }
 
