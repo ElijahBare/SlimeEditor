@@ -1,178 +1,119 @@
 package org.ebs.scripting;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Map;
-import java.util.Objects;
+import java.io.File;
+import java.util.*;
 
 public class ScriptingAPI {
-    public static void runScript(Reader script, Map<String, Object> variables) throws Exception {
-        BufferedReader reader = new BufferedReader(script);
-        String line;
-        boolean result = false;
 
-        while ((line = reader.readLine()) != null) {
-            // Split the line into tokens separated by whitespace
-            String[] tokens = line.split("\\s+");
-            if (tokens[0].equals("if")) {
-                String var1 = tokens[1];
-                String operator = tokens[2];
-                String var2 = tokens[3];
-                String operator2 = null;
-                String condition = null;
+    public static Map<String, Object> variables = new HashMap<String, Object>();
 
-                try {
-                    operator2 = tokens[4];
-                    condition = tokens[5];
-                } catch (Exception ignored) {
+    public static void runScript(String path) {
+        File file = new File(path);
+        try (Scanner sc = new Scanner(file)) {
+            while (sc.hasNext()) {
+                String line = sc.nextLine();
+                String[] strings = line.split("\\W+");
+                ScriptingAPI parser = new ScriptingAPI();
+                parser.push(strings);
 
+
+                if (line.startsWith("LOG")) {
+                    System.out.println(line.substring(line.indexOf("LOG ") + 4));
                 }
 
-
-                for (String varName : variables.keySet()) {
-                    if (Objects.equals(varName, var1)) {
-                        var1 = (String) variables.get(varName);
-                    }
-                }
-                for (String varName : variables.keySet()) {
-                    if (Objects.equals(varName, var2)) {
-                        var2 = (String) variables.get(varName);
+                if (line.startsWith("CONST")) {
+                    //already set
+                    if (variables.containsValue(strings[1])) {
+                        throw new Exception("Const variable " + strings[1] + " Defined More than once");
+                    } else {
+                        variables.put(strings[1], strings[2]);
+                        System.out.println(strings[1] + " has been set to " + strings[2]);
                     }
                 }
 
-                System.out.printf("%s %s %s %s %s \n", var1, operator, var2, operator2, condition);
-
-                // perform the operation only if both var1 and var2 are numeric
-                if (operator2 == null && condition == null) {
-                    switch (operator) {
-                        case ">":
-                            result = Double.parseDouble(var1) > Double.parseDouble(var2);
-                            break;
-                        case "<":
-                            result = Double.parseDouble(var1) == Double.parseDouble(var2);
-                            break;
-                        case "==":
-                            result = Double.parseDouble(var1) == Double.parseDouble(var2);
-                            break;
-                        default:
-                            throw new Exception("Second operator is invalid");
-
-
+                if (line.startsWith("VAR")) {
+                    //already set
+                    if (variables.containsValue(strings[1])) {
+                        variables.remove(strings[1]);
+                        variables.put(strings[1], strings[2]);
+                    } else {
+                        variables.put(strings[1], strings[2]);
                     }
-                    System.out.println(result);
-
-                } else if (isNumeric(var1) && isNumeric(var2)) {
-                    switch (operator) {
-                        case "+":
-                            switch (operator2) {
-                                case ">":
-                                    result = Double.parseDouble(var1) + Double.parseDouble(var2) > Double.parseDouble(condition);
-                                    break;
-                                case "<":
-                                    result = Double.parseDouble(var1) + Double.parseDouble(var2) < Double.parseDouble(condition);
-                                    break;
-                                case "==":
-                                    result = Double.parseDouble(var1) + Double.parseDouble(var2) == Double.parseDouble(condition);
-                                    break;
-                                default:
-                                    throw new Exception("Second operator is invalid");
-                            }
-                            break;
-                        case "-":
-                            switch (operator2) {
-                                case ">":
-                                    result = Double.parseDouble(var1) - Double.parseDouble(var2) > Double.parseDouble(condition);
-                                    break;
-                                case "<":
-                                    result = Double.parseDouble(var1) - Double.parseDouble(var2) < Double.parseDouble(condition);
-                                    break;
-                                case "==":
-                                    result = Double.parseDouble(var1) - Double.parseDouble(var2) == Double.parseDouble(condition);
-                                    break;
-                                default:
-                                    throw new Exception("Second operator is invalid");
-
-                            }
-                            break;
-                        case "*":
-                            switch (operator2) {
-                                case ">":
-                                    result = Double.parseDouble(var1) * Double.parseDouble(var2) > Double.parseDouble(condition);
-                                    break;
-                                case "<":
-                                    result = Double.parseDouble(var1) * Double.parseDouble(var2) < Double.parseDouble(condition);
-                                    break;
-                                case "==":
-                                    result = Double.parseDouble(var1) * Double.parseDouble(var2) == Double.parseDouble(condition);
-                                    break;
-                                default:
-                                    throw new Exception("Second operator is invalid");
-
-                            }
-                            break;
-                        case "/":
-                            switch (operator2) {
-                                case ">":
-                                    result = Double.parseDouble(var1) / Double.parseDouble(var2) > Double.parseDouble(condition);
-                                    break;
-                                case "<":
-                                    result = Double.parseDouble(var1) / Double.parseDouble(var2) < Double.parseDouble(condition);
-                                    break;
-                                case "==":
-                                    result = Double.parseDouble(var1) / Double.parseDouble(var2) == Double.parseDouble(condition);
-                                    break;
-                                default:
-                                    throw new Exception("Second operator is invalid");
-
-                            }
-                            break;
-                        case "%":
-                            switch (operator2) {
-                                case ">":
-                                    result = Double.parseDouble(var1) % Double.parseDouble(var2) > Double.parseDouble(condition);
-                                    break;
-                                case "<":
-                                    result = Double.parseDouble(var1) % Double.parseDouble(var2) < Double.parseDouble(condition);
-                                    break;
-                                case "==":
-                                    result = Double.parseDouble(var1) % Double.parseDouble(var2) == Double.parseDouble(condition);
-                                    break;
-                                default:
-                                    throw new Exception("Second operator is invalid");
-
-                            }
-                            break;
-                    }
-                    System.out.println(result);
-
-                } else {
-
-                    throw new Exception("If statement variables are invalid");
+                    System.out.println(strings[1] + " has been set to " + strings[2]);
 
                 }
-
-
-            } else if (tokens[0].equals("set")) {
-                // Set a variable
-                String varName = tokens[1];
-                Object value = tokens[2];
-                variables.put(varName, value);
-            } else {
-                // Process other statements
             }
-
+        } catch (Exception e) {
+            System.out.println("Something wrong! " + Arrays.toString(e.getStackTrace()));
         }
-        reader.close();
+
     }
 
-    public static boolean isNumeric(Object in) {
-        try {
-            Double.parseDouble((String) in);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+    static ArrayList<Double> stack = new ArrayList<>();
+
+    private void push(String[] strings) {
+        for (int i = 0; i < strings.length; i++) {
+            switch (strings[i]) {
+                case ("PUSH"):
+                    if (strings[i + 1] != null) {
+                        try {
+                            double a = Double.parseDouble(strings[i + 1]);
+                            stack.add(a);
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                    break;
+                case ("ADD"):
+                    if (stack.size() > 1) {
+                        double a = stack.get(stack.size() - 1);
+                        double b = stack.get(stack.size() - 2);
+                        stack.remove(stack.size() - 1);
+                        stack.remove(stack.size() - 1);
+                        stack.add(a + b);
+                    }
+                    break;
+                case ("MINUS"):
+                    if (stack.size() > 1) {
+                        double a = stack.get(stack.size() - 1);
+                        double b = stack.get(stack.size() - 2);
+                        stack.remove(stack.size() - 1);
+                        stack.remove(stack.size() - 1);
+                        stack.add(a - b);
+                    }
+                    break;
+                case ("CLEAR"):
+                    stack.clear();
+                    break;
+                case ("MULTIPLY"):
+                    if (stack.size() > 1) {
+                        double a = stack.get(stack.size() - 1);
+                        double b = stack.get(stack.size() - 2);
+                        stack.remove(stack.size() - 1);
+                        stack.remove(stack.size() - 1);
+                        stack.add(a * b);
+                    }
+                    break;
+                case ("DIVIDE"):
+                    if (stack.size() > 1) {
+                        double a = stack.get(stack.size() - 1);
+                        double b = stack.get(stack.size() - 2);
+                        stack.remove(stack.size() - 1);
+                        stack.remove(stack.size() - 1);
+                        stack.add(a / b);
+                    }
+                    break;
+                case ("POP"):
+                    if (stack.size() > 0) {
+                        System.out.println(stack.get(stack.size() - 1));
+                        stack.remove(stack.size() - 1);
+                    }
+                    break;
+                case ("PICK"):
+                    if (stack.size() > 0) {
+                        System.out.println(stack.get(stack.size() - 1));
+                    }
+                    break;
+            }
         }
     }
-
 }

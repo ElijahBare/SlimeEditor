@@ -1,0 +1,9 @@
+PUSH 17
+PUSH 18
+
+MULTIPLY
+
+VAR x 10
+VAR x 4
+PICK 
+LOG complete

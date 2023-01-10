@@ -43,9 +43,7 @@ public class SlimeEditor extends JFrame {
     private JMenuItem upFontSize;
     private JMenuItem lowerFontSize;
 
-
     private JMenuItem aboutMenuItem;
-
 
 
     private String fileName = "";
@@ -63,7 +61,7 @@ public class SlimeEditor extends JFrame {
         textArea = new JTextArea();
         textArea.setBackground(Color.DARK_GRAY);
         textArea.setForeground(Color.WHITE);
-        textArea.setCaretColor(Color.BLUE.darker().darker());
+        textArea.setCaretColor(Color.white);
         textArea.setSelectionColor(Color.CYAN);
 
         add(new JScrollPane(textArea), BorderLayout.CENTER);
@@ -186,12 +184,11 @@ public class SlimeEditor extends JFrame {
                     HashMap<String, Color> wordsToColors = new HashMap<>();
                     wordsToColors.put("if", new Color(0xA9FF7600, true));
                     wordsToColors.put("else", new Color(0xA9FF7600, true));
-                    wordsToColors.put("is", new Color(0xA9FF7600, true));
-                    wordsToColors.put("in", new Color(0xA9FF7600, true));
-                    wordsToColors.put("sendPacket", new Color(0x6C324BC9, true));
-                    wordsToColors.put("world", new Color(0x8E6444FF, true));
-                    wordsToColors.put("player", new Color(0x8E6444FF, true));
+                    wordsToColors.put("is", new Color(0xAE6444FF, true));
+                    wordsToColors.put("in", new Color(0xAE6444FF, true));
+                    wordsToColors.put("set", new Color(0x963235C9, true));
                     wordsToColors.put("\"", new Color(0xA863AF63, true));
+                    wordsToColors.put("//", Color.GRAY.brighter());
 
                     highlightWords(wordsToColors);
 
@@ -424,7 +421,7 @@ public class SlimeEditor extends JFrame {
                 Map<String, Object> variables = new HashMap<>();
 
                 // Run the script
-                ScriptingAPI.runScript(scriptReader, variables);
+                ScriptingAPI.runScript(fileName);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
