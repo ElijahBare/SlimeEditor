@@ -235,7 +235,7 @@ public class SlimeEditor extends JFrame {
                         writer.write(textArea.getText());
                         writer.close();
 
-                       JOptionPane.showMessageDialog(null,"AutoSave Running...");
+//                       JOptionPane.showMessageDialog(null,"AutoSave Running...");
                     }
 
                 } catch (IOException ex) {
@@ -461,7 +461,6 @@ public class SlimeEditor extends JFrame {
 
     public static void main(String[] args) throws IOException {
         INSTANCE = new SlimeEditor();
-        Runtime.getRuntime().exec(new String[] {"cmd", "/K", "Start"});
 
     }
 }

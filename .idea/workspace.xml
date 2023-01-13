@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="27b2bb81-7f3c-42c1-9af2-6d2650673ca8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/hotswap_agent.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/hotswap_agent.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ebs/SlimeEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ebs/SlimeEditor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +79,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
   </component>
-  <component name="RunManager" selected="Gradle.SlimeEditor [build]">
+  <component name="RunManager" selected="Application.org.ebs.SlimeEditor">
     <configuration name="SlimeEditor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="SlimeEditor" />
       <module name="SlimeEditor.main" />
