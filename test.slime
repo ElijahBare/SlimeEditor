@@ -1,9 +1,72 @@
-PUSH 17
-PUSH 18
+//Welcome to Slime Editor/Script
+//Keep in mind this is a VERY basic language and should only be used for educational purposes, it is not intended for actual use. Just teaching/learning the basics.
+//Here are some basic examples:
+
+
+
+//Set Variables using the keyword VAR.
+//Format:
+// VAR name value
+
+
+VAR name Elijah
+
+VAR age 15
+
+
+//Print using LOG
+
+LOG Hello World!
+
+//Print out variables Using the format: 
+// %variable_name$
+//for example:
+
+LOG %name$
+
+LOG %age$
+
+//Do Math!
+//Use the Push keyword to define what numbers you want to do math to
+PUSH 3
+PUSH 8
+
+//Adding should be 11.
+LOG Result of adding 3 and 8 should return 11...
+
+//Use the Add keyword to do addition
+ADD
+
+//Finally take the result and print it out using the Pick keyword
+PICK
+
+//You can also Multiply, Divide, Subtract and Mod (Take the modulo)
+PUSH 3
+
+//11*3 should be 33
+LOG 11*3 should be 33...
 
 MULTIPLY
 
-VAR x 10
-VAR x 4
-PICK 
-LOG complete
+POP
+
+//If you want to retrieve the answer from the math equation, but you also want to make it not use the last answer use the Pop keyword.
+
+PUSH 4
+PUSH age
+ADD
+
+LOG Elijah's Age in four years will be:
+POP
+
+
+//Thanks for reading through!
+LOG Welcome to SlimeScript!
+
+
+
+
+
+
+
+

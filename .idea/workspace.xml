@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="27b2bb81-7f3c-42c1-9af2-6d2650673ca8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/hotswap_agent.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/hotswap_agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/slimescript_logo.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ebs/SlimeEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ebs/SlimeEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ebs/scripting/ScriptingAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ebs/scripting/ScriptingAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.slime" beforeDir="false" afterPath="$PROJECT_DIR$/test.slime" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,6 +81,19 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.org.ebs.SlimeEditor">
     <configuration name="SlimeEditor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -134,38 +150,21 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="SlimeEditor [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="clean" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
     <configuration name="SlimeEditor-1.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
       <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/SlimeEditor-1.0-SNAPSHOT.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="SlimeEditor-1.1.1.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/SlimeEditor-1.1.1.jar" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.SlimeEditor [build]" />
+        <item itemvalue="JAR Application.SlimeEditor-1.1.1.jar" />
         <item itemvalue="JAR Application.SlimeEditor-1.0-SNAPSHOT.jar" />
         <item itemvalue="Application.org.ebs.SlimeEditor" />
         <item itemvalue="Application.SlimeEditor" />
-        <item itemvalue="Gradle.SlimeEditor [clean]" />
       </list>
     </recent_temporary>
   </component>

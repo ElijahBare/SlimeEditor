@@ -13,6 +13,8 @@ import javax.swing.text.Highlighter;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +53,7 @@ public class SlimeEditor extends JFrame {
 
     int currentState = 0;
 
-    public SlimeEditor() {
+    public SlimeEditor() throws MalformedURLException {
 
         // Set the title and default close operation
         setTitle("Slime Editor");
@@ -59,10 +61,10 @@ public class SlimeEditor extends JFrame {
 
         // Create the text area and add it to the center of the frame
         textArea = new JTextArea();
-        textArea.setBackground(Color.DARK_GRAY);
+        textArea.setBackground(new Color(0x0A3560));
         textArea.setForeground(Color.WHITE);
-        textArea.setCaretColor(Color.white);
-        textArea.setSelectionColor(Color.CYAN);
+        textArea.setCaretColor(Color.WHITE);
+        textArea.setSelectionColor(new Color(0x93D0FF));
 
         add(new JScrollPane(textArea), BorderLayout.CENTER);
 
@@ -188,7 +190,7 @@ public class SlimeEditor extends JFrame {
                     wordsToColors.put("ADD", new Color(0xA9FF7600, true));
                     wordsToColors.put("SUBTRACT", new Color(0xA9FF7600, true));
                     wordsToColors.put("DIVIDE", new Color(0xA9FF7600, true));
-                    wordsToColors.put("MULTIPLY", new Color(0xAE6444FF, true));
+                    wordsToColors.put("MULTIPLY", new Color(0xA9FF7600, true));
                     wordsToColors.put("\"", new Color(0xA863AF63, true));
                     wordsToColors.put("VAR", new Color(0xA863AF63, true));
                     wordsToColors.put("//", Color.GRAY.brighter());
@@ -436,7 +438,8 @@ public class SlimeEditor extends JFrame {
     class AboutMenuItemListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JOptionPane.showMessageDialog(SlimeEditor.this,
-                    "Made for fun by EBS");
+                    "Made for fun by EBS"
+            );
         }
     }
 
@@ -459,8 +462,8 @@ public class SlimeEditor extends JFrame {
         }
     }
 
+
     public static void main(String[] args) throws IOException {
         INSTANCE = new SlimeEditor();
-
     }
 }
